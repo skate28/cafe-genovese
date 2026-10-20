@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+/*
+  Fallbacks match src/content/site.ts palette. Live values are set on <html>.
+  Morning cafe: oat linen page, espresso text, caramel buttons, herb accents,
+  honey highlights, dark-roast bands.
+*/
+:root {
+  --cg-ink: #2a211c;
+  --cg-brand: #9a4524;
+  --cg-brand-deep: #6e3016;
+  --cg-herb: #2f5d45;
+  --cg-honey: #e4b33a;
+  --cg-roast: #231c17;
+  --cg-linen: #f4efe6;
+  --cg-paper: #fffcf8;
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-ink: var(--cg-ink);
+  --color-brand: var(--cg-brand);
+  --color-brand-deep: var(--cg-brand-deep);
+  --color-herb: var(--cg-herb);
+  --color-honey: var(--cg-honey);
+  --color-roast: var(--cg-roast);
+  --color-linen: var(--cg-linen);
+  --color-paper: var(--cg-paper);
+  --color-line: color-mix(in oklab, var(--cg-ink) 12%, transparent);
+  --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-face), Fraunces, Georgia, serif;
+  --animate-marquee: marquee 42s linear infinite;
+  --animate-sun: sunspin 80s linear infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes sunspin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.25rem;
+  background: var(--cg-linen);
+}
+
+body {
+  background-color: var(--cg-linen);
+  color: var(--cg-ink);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--cg-honey);
+  color: var(--cg-ink);
+}
+
+.sunrise {
+  background:
+    radial-gradient(ellipse 42% 36% at 92% 0%, color-mix(in oklab, var(--cg-honey) 78%, white) 0%, transparent 68%),
+    radial-gradient(ellipse 36% 28% at 0% 100%, color-mix(in oklab, var(--cg-herb) 16%, transparent), transparent 70%),
+    var(--cg-linen);
+}
+
+.linen-grain {
+  position: relative;
+  isolation: isolate;
+}
+
+.linen-grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.45;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.32 0 0 0 0 0.18 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.napkin {
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--cg-honey) 18%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--cg-honey) 18%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.leader {
+  flex: 1 1 auto;
+  min-width: 0.75rem;
+  border-bottom: 1.5px dotted color-mix(in oklab, var(--cg-ink) 28%, transparent);
+  transform: translateY(-0.35em);
+}
+
+.ticket {
+  background-image: radial-gradient(circle at 0 18px, transparent 10px, var(--cg-paper) 11px),
+    radial-gradient(circle at 100% 18px, transparent 10px, var(--cg-paper) 11px);
+  background-size: 51% 100%;
+  background-repeat: no-repeat;
+  background-position: left, right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-marquee,
+  .animate-sun {
+    animation: none;
+  }
+}
