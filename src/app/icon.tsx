@@ -1,13 +1,22 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+
 import { ImageResponse } from "next/og";
 
+import { signLines } from "@/components/wordmark";
 import { site } from "@/content/site";
 
-export const size = { width: 64, height: 64 };
+export const size = { width: 192, height: 192 };
 export const contentType = "image/png";
 
-/** Generated mark: caramel tile, linen initial. No logo file yet. */
-export default function Icon() {
-  const initial = site.name.trim().charAt(0) || "C";
+/** Navy serif mark in the storefront’s stacked lettering. No raster logo. */
+export default async function Icon() {
+  const [regular, bold] = await Promise.all([
+    readFile(join(process.cwd(), "src/fonts/LibreBaskerville-Regular.ttf")),
+    readFile(join(process.cwd(), "src/fonts/LibreBaskerville-Bold.ttf")),
+  ]);
+  const { small, large } = signLines(site.name);
+
   return new ImageResponse(
     (
       <div
@@ -15,19 +24,25 @@ export default function Icon() {
           width: "100%",
           height: "100%",
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          borderRadius: 16,
           background: site.palette.brand,
           color: site.palette.rice,
-          fontSize: 42,
-          fontStyle: "italic",
-          fontFamily: "Georgia, serif",
         }}
       >
-        {initial}
+        {small ? (
+          <div style={{ display: "flex", fontFamily: "Sign", fontSize: 26, fontWeight: 400 }}>{small}</div>
+        ) : null}
+        <div style={{ display: "flex", fontFamily: "Sign", fontSize: 34, fontWeight: 700, marginTop: 2 }}>{large}</div>
       </div>
     ),
-    { ...size },
+    {
+      ...size,
+      fonts: [
+        { name: "Sign", data: regular, weight: 400, style: "normal" },
+        { name: "Sign", data: bold, weight: 700, style: "normal" },
+      ],
+    },
   );
 }

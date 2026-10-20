@@ -1,22 +1,50 @@
 import { site } from "@/content/site";
 import { cn } from "@/lib/cn";
 
-export function splitName(name: string): { lead: string; tail: string } {
+/** Stacked lettering modeled on the storefront sign: small “Café” over a navy serif name. */
+export function signLines(name: string): { small: string; large: string } {
   const words = name.trim().split(/\s+/).filter(Boolean);
-  if (words.length === 0) return { lead: "", tail: "Cafe" };
-  if (words.length === 1) return { lead: "", tail: words[0] };
-  return { lead: words.slice(0, -1).join(" "), tail: words[words.length - 1] };
+  if (words.length >= 2 && /^caf[eé]$/i.test(words[0] ?? "")) {
+    return { small: "Café", large: words.slice(1).join(" ") };
+  }
+  if (words.length === 0) return { small: "", large: "Cafe" };
+  if (words.length === 1) return { small: "", large: words[0] ?? "Cafe" };
+  return { small: words.slice(0, -1).join(" "), large: words[words.length - 1] ?? "" };
 }
 
-export function Wordmark({ tone = "ink", className }: { tone?: "ink" | "linen"; className?: string }) {
-  const { lead, tail } = splitName(site.name);
-  const muted = tone === "linen" ? "text-linen/70" : "text-brand-deep";
-  const main = tone === "linen" ? "text-linen" : "text-ink";
+export function Wordmark({
+  tone = "navy",
+  size = "nav",
+  className,
+}: {
+  tone?: "navy" | "cream";
+  size?: "nav" | "hero";
+  className?: string;
+}) {
+  const { small, large } = signLines(site.name);
+  const color = tone === "cream" ? "text-linen" : "text-brand";
+  const hero = size === "hero";
 
   return (
-    <span className={cn("inline-flex flex-col leading-none", className)}>
-      {lead && <span className={cn("text-[0.62rem] font-semibold uppercase tracking-[0.28em]", muted)}>{lead}</span>}
-      <span className={cn("font-display text-[1.35rem] font-medium italic tracking-tight sm:text-[1.65rem]", main)}>{tail}</span>
+    <span className={cn("font-sign inline-flex flex-col items-start leading-none", color, className)}>
+      {small ? (
+        <span
+          className={cn(
+            "pl-[0.08em] font-normal",
+            hero ? "text-2xl tracking-[0.01em] sm:text-4xl" : "text-[0.62rem] tracking-[0.01em] sm:text-[0.72rem]",
+          )}
+        >
+          {small}
+        </span>
+      ) : null}
+      <span
+        className={cn(
+          "font-bold tracking-[-0.03em]",
+          hero ? "text-[clamp(3.5rem,13vw,7.25rem)] leading-[0.84]" : "-mt-px text-[1.15rem] leading-none sm:text-[1.4rem]",
+        )}
+      >
+        {large}
+      </span>
     </span>
   );
 }

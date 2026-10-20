@@ -14,7 +14,7 @@ export function MenuSection() {
   const tel = telHref(site.phone);
 
   return (
-    <section id="menu" className="bg-paper py-20 sm:py-28">
+    <section id="menu" className="scroll-mt-24 bg-paper py-20 sm:py-28">
       <div className={container}>
         <Reveal className="max-w-2xl">
           <p className={eyebrow}>The menu</p>
@@ -25,7 +25,7 @@ export function MenuSection() {
         </Reveal>
 
         <Reveal delay={0.08} className="mt-10">
-          <div className="overflow-hidden rounded-[2rem] bg-linen p-3 shadow-[0_30px_80px_-48px] shadow-roast ring-1 ring-ink/10 sm:p-4">
+          <div className="rounded-[2rem] bg-linen p-3 shadow-[0_30px_80px_-48px] shadow-roast ring-1 ring-ink/10 sm:p-4">
             <div className="napkin rounded-[1.4rem] bg-linen/40 px-4 py-8 sm:px-8 sm:py-10">
               {view.sample && (
                 <p className="mb-6 inline-flex rounded-full bg-honey px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-ink">

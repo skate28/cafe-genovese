@@ -9,7 +9,9 @@ import type { Photo } from "@/content/types";
 import { cn } from "@/lib/cn";
 import { photoDimensions } from "@/lib/photos";
 
-export function GalleryGrid({ photos }: { photos: Photo[] }) {
+export type GalleryShot = Pick<Photo, "src" | "alt" | "width" | "height" | "category">;
+
+export function GalleryGrid({ photos }: { photos: GalleryShot[] }) {
   const [open, setOpen] = useState<number | null>(null);
 
   useEffect(() => {

@@ -1,40 +1,36 @@
-import { GalleryGrid } from "@/components/gallery";
-import { MorningStillLife } from "@/components/ornaments";
+import { GalleryGrid, type GalleryShot } from "@/components/gallery";
 import { Reveal } from "@/components/reveal";
 import { container, eyebrow, sectionTitle } from "@/components/styles";
 import { site } from "@/content/site";
 import { cn } from "@/lib/cn";
-import { galleryRemainder } from "@/lib/dishes";
+import { galleryPhotos } from "@/lib/photos";
+
+function shots(): GalleryShot[] {
+  return galleryPhotos(site.photos).map((photo) => ({
+    src: photo.src,
+    alt: photo.alt,
+    width: photo.width,
+    height: photo.height,
+    category: photo.category,
+  }));
+}
 
 export function Gallery() {
-  const photos = galleryRemainder(site);
+  const photos = shots();
+  if (photos.length === 0) return null;
 
   return (
-    <section id="gallery" className="py-20 sm:py-28">
+    <section id="gallery" className="scroll-mt-24 py-20 sm:py-28">
       <div className={container}>
         <Reveal className="max-w-2xl">
           <p className={eyebrow}>Gallery</p>
           <h2 className={cn(sectionTitle, "mt-4")}>
-            The cafe, <span className="italic text-brand">in daylight</span>
+            From the counter, <span className="italic text-brand">and the grill</span>
           </h2>
         </Reveal>
-        {photos.length > 0 ? (
-          <Reveal delay={0.08} className="mt-10">
-            <GalleryGrid photos={photos} />
-          </Reveal>
-        ) : (
-          <Reveal delay={0.08}>
-            <div className="sunrise mt-10 grid items-center gap-6 overflow-hidden rounded-[2rem] px-6 py-10 ring-1 ring-ink/10 sm:grid-cols-[180px_1fr] sm:px-10">
-              <MorningStillLife className="mx-auto max-w-[180px]" />
-              <div>
-                <p className="font-display text-3xl text-ink">No photos yet.</p>
-                <p className="mt-3 max-w-md leading-relaxed text-ink/70">
-                  This gallery only shows pictures saved in the cafe’s own image folder. Nothing stock, and nothing generated, until those photos are added.
-                </p>
-              </div>
-            </div>
-          </Reveal>
-        )}
+        <Reveal delay={0.08} className="mt-10">
+          <GalleryGrid photos={photos} />
+        </Reveal>
       </div>
     </section>
   );

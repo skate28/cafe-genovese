@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Figtree, Fraunces } from "next/font/google";
+import { Figtree, Fraunces, Libre_Baskerville } from "next/font/google";
 import type { CSSProperties, ReactNode } from "react";
 
 import { Footer } from "@/components/footer";
@@ -28,6 +28,13 @@ const sans = Figtree({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-sans-face",
+  display: "swap",
+});
+
+const sign = Libre_Baskerville({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-sign-face",
   display: "swap",
 });
 
@@ -79,7 +86,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={cn(display.variable, sans.variable, "h-full")} style={paletteStyle(site.palette)}>
+    <html lang="en" className={cn(display.variable, sans.variable, sign.variable, "h-full")} style={paletteStyle(site.palette)}>
       <body className="min-h-full bg-linen font-sans text-ink antialiased">
         <a
           href="#content"
