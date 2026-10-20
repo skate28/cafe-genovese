@@ -1,8 +1,8 @@
 /**
  * Content shapes for Cafe Genovese.
  * Copied from skate28/catullos-italian `src/content/types.ts`. Type names and shapes are unchanged.
- * The only addition is the optional `FeatureFlags.catering` field, documented under
- * "CAFE GENOVESE EXTENSIONS" at the bottom of this file. Components hide or default it when absent.
+ * Cafe Genovese additions are optional and documented under "CAFE GENOVESE EXTENSIONS"
+ * at the bottom of this file. Components hide them when absent.
  *
  * --- Original Catullo's Italian header (kept for reference) ---
  * Content shapes for Catullo's Italian.
@@ -280,6 +280,11 @@ export type SiteContent = {
   };
   /** Footer credit line. */
   footerCredit: string;
+  /**
+   * CAFE GENOVESE EXTENSION: additional platform ratings shown in Reviews after `rating`.
+   * Absent or empty = hidden.
+   */
+  extraRatings?: Rating[];
 };
 
 // ---------------------------------------------------------------------------
@@ -329,11 +334,13 @@ export type WhatToExpect = {
 // CAFE GENOVESE EXTENSIONS
 // ---------------------------------------------------------------------------
 //
-// One optional field, added for the catering Coming soon card:
-//
 //   FeatureFlags.catering?: FeatureMode
+//     Catering / group-order requests. See FeatureFlags above.
 //
-// No other types, fields, or required keys were added. Ordering links already
-// exist as `SiteContent.orderingLinks` (`OrderingLink[]`). Text pre-orders use
-// `features.textPreorders` + `preorder`. After-hours AI answering uses
-// `features.aiPhone` + `afterHoursPhone`.
+//   SiteContent.extraRatings?: Rating[]
+//     Additional platform ratings shown in Reviews after `rating`.
+//     Absent or empty = hidden.
+//
+// Ordering links already exist as `SiteContent.orderingLinks` (`OrderingLink[]`).
+// Text pre-orders use `features.textPreorders` + `preorder`. After-hours answering
+// uses `features.aiPhone` + `afterHoursPhone`. None of those feature flags are rendered.

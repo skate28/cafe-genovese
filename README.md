@@ -14,7 +14,7 @@ npm run build
 
 ## Content contract
 
-All business copy, hours, menu, links, and photos live in `src/content/site.ts`. Types live in `src/content/types.ts` (the Catullo's Italian contract, plus one optional field). Content can replace `site.ts` wholesale. Components read the menu through `getMenu()` / `menuView()` in `src/lib/menu.ts`.
+All business copy, hours, menu, links, and photos live in `src/content/site.ts`. Types live in `src/content/types.ts` (the Catullo's Italian contract, plus optional `features.catering` and `extraRatings`). Content can replace `site.ts` wholesale. Components read the menu through `getMenu()` / `menuView()` in `src/lib/menu.ts`.
 
 - Empty strings, empty arrays, and `null` hide the matching UI.
 - `menu[].items[].placeholder: true` marks stand-in dishes. They are omitted from the page and from JSON-LD. Leave `price` unset to hide the price. `priceFrom` renders as a starting price (`$8.99+`). Amounts under $1 render in cents (`75¢`).
@@ -22,11 +22,11 @@ All business copy, hours, menu, links, and photos live in `src/content/site.ts`.
 - `orderingLinks` renders only valid links present in content. An empty array hides the order section.
 - `photos` renders only files referenced as `/images/...`. An empty array hides the gallery. Do not add stock or generated food photos. Photo `credit` values stay in content and are not rendered.
 
-### Cafe Genovese addition
+### Cafe Genovese additions
 
-`features.catering?: "off" | "preview" | "live"` drives the catering Coming soon card. Absent means `"preview"`. `"live"` is kept only when `customOrders.heading` is set and a contact path exists (`customOrders.email`, or texting switched on). Otherwise the card stays a labeled preview.
+`extraRatings?: Rating[]` lists more platform scores (Yelp, Tripadvisor) after `rating` in Reviews. Absent or empty hides those badges. Quotes come from `testimonials` and need a source link. Reviewer names are not rendered.
 
-`features.textPreorders` and `features.aiPhone` work the same way (`textNumber` / an sms ordering link, and `afterHoursPhone`).
+`features.catering`, `features.textPreorders`, `features.aiPhone`, and `features.waitlist` are not shown.
 
 ## Noindex
 

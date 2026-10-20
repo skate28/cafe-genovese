@@ -4,7 +4,8 @@ import type { SiteContent } from "./types";
  * Cafe Genovese (St. Johns, FL): the only editable content file. Data only.
  *
  * Shapes: src/content/types.ts in skate28/cafe-genovese (Catullo's types + optional
- * FeatureFlags.catering; copied verbatim to handoff/types.reference.ts). Field docs: CONTENT_SCHEMA.md.
+ * FeatureFlags.catering; local copy in handoff/types.reference.ts, plus the dev's pending
+ * `extraRatings?: Rating[]` added locally for the typecheck). Field docs: CONTENT_SCHEMA.md.
  * Data only (call/text helpers live in src/lib/contact.ts). Mark anything unconfirmed `// TODO(Leads): verify`.
  * No owner/staff names, personal emails, reviewer names or photo-source URLs in this file.
  *
@@ -18,7 +19,7 @@ import type { SiteContent } from "./types";
  *
  * Ordering: dine-in + call-ahead takeout. The printed menu says "Call Ahead & Take Out Orders Welcome!"
  * (verified 2026-10-20). No online ordering, DoorDash, Uber Eats or Grubhub store found. No texting.
- * `features` (text pre-orders, AI phone, catering) are "Coming soon" pitch previews only.
+ * All `features` are "off": the site only shows services the cafe offers today (dine-in, call-ahead).
  *
  * Photos: real customer photos from the cafe's own Google Maps listing (downloaded, not hotlinked).
  * Pitch use only until the owner approves; sources in photo-sources.md. No logo found (no artwork
@@ -68,10 +69,8 @@ export const site: SiteContent = {
     e164: "+19048290707",
   },
 
-  // TODO(Leads): set once an AI answering line is live (pitch: the cafe closes at 2 PM weekdays and
-  // noon Saturday, so every evening/Sunday call goes unanswered).
+  // None today.
   afterHoursPhone: null,
-  // TODO(Leads): confirm the cafe line can receive texts before showing any "Text us" button.
   textNumber: null,
 
   closedNotice:
@@ -116,19 +115,63 @@ export const site: SiteContent = {
   // pages fine). No Instagram found. TODO(Leads): ask the owner whether the page still exists, then add it.
   socials: [],
 
-  // Google 4.7 from 540 reviews (Google Maps, read live 2026-10-20).
-  // Others: Yelp 4.4 (170, via Apple Maps), Tripadvisor 4.5 (58, unclaimed). TODO(Leads): re-check before launch.
+  // Re-checked 2026-10-20 ~12:15 PM ET. Google: Google Maps listing, read live.
   rating: {
     value: 4.7,
     count: 540,
     source: "Google",
   },
 
-  // Stays EMPTY until the owner approves quoting specific reviews (and reviewer display names).
-  testimonials: [],
+  // Yelp 4.4 from 171 (was 170 this morning; Yelp data as shown on Apple Maps, read live 2026-10-20).
+  // Tripadvisor 4.5 from 58 (unclaimed listing; search-index copy of the page carrying a 2026-09-28
+  // review; tripadvisor.com itself blocks automated fetches). TODO(Leads): re-check before launch.
+  extraRatings: [
+    { value: 4.4, count: 171, source: "Yelp" },
+    { value: 4.5, count: 58, source: "Tripadvisor" },
+  ],
+
+  // Verbatim excerpts (whole sentences, unedited, original spelling/punctuation) from public reviews.
+  // Attributed by platform only: no reviewer names/initials, no review-specific URLs. sourceUrl is the
+  // platform's public business listing. Dated source notes: research_brief.md "Testimonials".
+  // TODO(Leads): owner OKs quoting these before launch.
+  testimonials: [
+    {
+      quote:
+        "That’s gotta be one of the best corn beef hash breakfasts I’ve ever had. The food was seasoned super well, perfectly crispy and delicious.",
+      sourceLabel: "Google review",
+      sourceUrl: "https://www.google.com/maps/search/?api=1&query=Cafe+Genovese+1515+County+Road+210+W+St+Johns+FL+32259&query_place_id=ChIJ0Wp4sJ8y5IgRIKMoUAgiKNw",
+    },
+    {
+      quote:
+        "If you want delicious food that was cooked with love then this is your place! Family run restaurant where everyone knows each other and is enjoying company!",
+      sourceLabel: "Google review",
+      sourceUrl: "https://www.google.com/maps/search/?api=1&query=Cafe+Genovese+1515+County+Road+210+W+St+Johns+FL+32259&query_place_id=ChIJ0Wp4sJ8y5IgRIKMoUAgiKNw",
+    },
+    {
+      quote: "My wife wanted the Reuben again; it absolutely did not disappoint.",
+      sourceLabel: "Google review",
+      sourceUrl: "https://www.google.com/maps/search/?api=1&query=Cafe+Genovese+1515+County+Road+210+W+St+Johns+FL+32259&query_place_id=ChIJ0Wp4sJ8y5IgRIKMoUAgiKNw",
+    },
+    {
+      quote:
+        "The food is absolutely delicious—classic comfort food done right—but what really sets Cafe Genovese apart is the atmosphere. It’s genuine, friendly, and full of heart.",
+      sourceLabel: "Google review",
+      sourceUrl: "https://www.google.com/maps/search/?api=1&query=Cafe+Genovese+1515+County+Road+210+W+St+Johns+FL+32259&query_place_id=ChIJ0Wp4sJ8y5IgRIKMoUAgiKNw",
+    },
+    {
+      quote: "The food was great. The service stellar and you can't beat their menu choices.",
+      sourceLabel: "Yelp review",
+      sourceUrl: "https://www.yelp.com/biz/cafe-genovese-saint-johns",
+    },
+    {
+      quote: "There is always a conversation going on and when you walk in you are welcomed by name.",
+      sourceLabel: "Tripadvisor review",
+      sourceUrl: "https://www.tripadvisor.com/Restaurant_Review-g4153940-d904253-Reviews-Cafe_Genovese-St_Johns_Florida.html",
+    },
+  ],
 
   // Verified answers only.
-  // TODO(Leads): owner-only FAQs: catering / large breakfast orders, gluten-free options,
+  // TODO(Leads): owner-only FAQs: gluten-free options,
   // Veterans Day breakfast (a Google Q&A asks about it), outdoor seating use.
   faq: [
     {
@@ -392,18 +435,17 @@ export const site: SiteContent = {
     ],
   },
 
+  // Required by the type but unused: features.textPreorders is "off", so nothing renders. Kept empty
+  // on purpose so no texting copy can leak onto the page.
   preorder: {
-    heading: "Text-ahead pickup orders",
-    intro:
-      "Coming soon: text your order ahead and get a confirmation back. For now, call (904) 829-0707.",
-    // Copy for the coming-soon card (features.textPreorders = "preview").
-    textButtonLabel: "Text us your order",
-    textMessage: "Hi Cafe Genovese, I'd like to place a to-go order for pickup at ___:",
+    heading: "",
+    intro: "",
+    textButtonLabel: "",
+    textMessage: "",
     maxDaysAhead: 0,
   },
 
-  // customOrders intentionally absent (hidden): catering / large breakfast orders are unconfirmed.
-  // TODO(Leads): add a "Catering & large orders" section only if the owner offers it.
+  // customOrders intentionally absent (hidden).
 
   whatToExpect: {
     heading: "Come in and take a seat anywhere",
@@ -422,17 +464,13 @@ export const site: SiteContent = {
     ],
   },
 
-  // Pitch previews only ("Coming soon" cards): text pre-orders, after-hours AI phone, catering requests.
-  // Nothing here is live today.
+  // Every feature off (set explicitly: an absent flag defaults to "preview"). Nick: no "Coming soon"
+  // section; the site only shows what the cafe offers today. That slot becomes the reviews section.
   features: {
-    textPreorders: "preview",
+    textPreorders: "off",
     waitlist: "off",
-    aiPhone: "preview",
-    // NOT verified: no catering mention from the cafe, Google, Visit St. Augustine, Yelp or Tripadvisor.
-    // Only an AI-written mirror (Weeblyte) and the unverified cafegenovese[.]com mention catering.
-    // Stays "preview" (Coming soon card). TODO(Leads): owner confirms catering / large breakfast orders,
-    // then add `customOrders` (heading + contact path) and switch to "live".
-    catering: "preview",
+    aiPhone: "off",
+    catering: "off",
   },
 
   heroKicker: "Breakfast & lunch · St. Johns · Since 2006",

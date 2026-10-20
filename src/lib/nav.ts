@@ -1,8 +1,8 @@
 import { site } from "@/content/site";
-import { anyFeatureVisible } from "@/lib/features";
 import { galleryPhotos } from "@/lib/photos";
 import { menuView } from "@/lib/menu";
 import { orderingLinks } from "@/lib/ordering";
+import { hasReviews } from "@/lib/reviews";
 
 export type NavLink = {
   href: string;
@@ -15,7 +15,7 @@ export function primaryNav(): NavLink[] {
     { href: "#story", label: "Our story", show: about },
     { href: "#menu", label: "Menu", show: menuView(site).length > 0 },
     { href: "#expect", label: "What to expect", show: Boolean(site.whatToExpect?.items.length) },
-    { href: "#soon", label: "Coming soon", show: anyFeatureVisible(site) },
+    { href: "#reviews", label: "Reviews", show: hasReviews(site) },
     { href: "#order", label: "Order", show: orderingLinks(site).length > 0 },
     { href: "#gallery", label: "Gallery", show: true },
     { href: "#visit", label: "Visit", show: true },

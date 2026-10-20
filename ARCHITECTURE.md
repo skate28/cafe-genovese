@@ -12,9 +12,9 @@ Folder layout matches `skate28/catullos-italian`. The visual design is separate:
 | **Content** | `src/content/site.ts` (data only), `public/images/` |
 | **Code** | `src/app/`, `src/components/`, `src/lib/`, `src/content/types.ts`, config |
 
-Content contract: [CONTENT_SCHEMA.md](./CONTENT_SCHEMA.md). Base types are Catullo's Italian. The only addition is optional `features.catering`.
+Content contract: [CONTENT_SCHEMA.md](./CONTENT_SCHEMA.md). Base types are Catullo's Italian. Cafe Genovese adds optional `features.catering` and optional `extraRatings`.
 
-Page order: Hero (call, directions, open/closed pill) → menu marquee → Our story → favorites (only when confirmed) → Menu → What to expect (only when set) → Coming soon → Gallery → Order (only when links exist) → Hours & location → FAQ → Footer.
+Page order: Hero (call, directions, open/closed pill) → menu marquee → Our story → favorites (only when confirmed) → Menu → What to expect (only when set) → Reviews (only when a rating or a sourced quote exists) → Gallery → Order (only when links exist) → Hours & location → FAQ → Footer.
 Phones get a sticky Call / Menu / Directions bar.
 
 ## Menu data layer
@@ -23,9 +23,11 @@ Phones get a sticky Call / Menu / Directions bar.
 
 Placeholder items are never rendered. JSON-LD uses `visibleItem()`, which drops placeholders. An item with a numeric `price` gets an Offer; an item without one stays unpriced.
 
-## Feature flags
+## Reviews
 
-`src/lib/features.ts`. `textPreorders`, `waitlist`, `aiPhone`, and `catering` are `off | preview | live`, default `preview`. `live` drops back to `preview` unless the data it needs is set. No `sms:` link renders while texting is not live. Preview cards say “Coming soon” and do not submit anything.
+`src/lib/reviews.ts`. The section shows `rating`, then `extraRatings`, then quotes that have an http(s) `sourceUrl`. Reviewer names are not rendered, and there is no Review or AggregateRating JSON-LD. With no rating, no extra ratings, and no sourced quotes, the section and its nav link are omitted.
+
+Feature flags (`textPreorders`, `waitlist`, `aiPhone`, `catering`) are not shown.
 
 ## Indexing
 
