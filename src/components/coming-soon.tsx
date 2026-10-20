@@ -7,6 +7,7 @@ import { site } from "@/content/site";
 import { cn } from "@/lib/cn";
 import { phoneLabel, telHref } from "@/lib/contact";
 import { anyFeatureVisible, featureMode, waitlistHref, type FeatureKey } from "@/lib/features";
+import { hoursPreviewLine } from "@/lib/hours";
 import { liveSmsHref, safeHref } from "@/lib/ordering";
 
 type Card = {
@@ -63,7 +64,7 @@ function cards(): Card[] {
       icon: Bot,
       title: "After-hours AI phone answering",
       body: "A preview of an assistant that could share hours and directions when the cafe is closed. It is not answering the phone.",
-      example: "“What time do you open?” → “Hours are still being confirmed — please call during the day.”",
+      example: `“What time do you open?” → “${hoursPreviewLine(site.hours)}”`,
       liveHref: after,
       liveLabel: site.afterHoursPhone ? `Call ${phoneLabel(site.afterHoursPhone)}` : "Call",
     },

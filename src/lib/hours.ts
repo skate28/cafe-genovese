@@ -122,7 +122,7 @@ export function zonedParts(date: Date, timeZone: string) {
 /** Open/closed in the cafe timezone, using that day's open and close. */
 export function getShopStatus(now: Date, content: ShopClockInput): ShopStatus {
   const hours = content.hours;
-  const summary = hours.summary.trim() || "Hours coming soon";
+  const summary = hours.summary.trim();
   const timeZone = hours.timezone.trim() || "America/New_York";
   let isOpen: boolean | null = null;
   let todayWindow: string | null = null;
@@ -226,4 +226,45 @@ export function weekdayKey(date: Date, timeZone: string): Weekday | null {
   } catch {
     return null;
   }
+}
+
+export type StatusTone = "open" | "closed" | "neutral";
+
+/** Static hours line used before the live clock runs. Prefers `hours.summary`. */
+export function hoursFallback(hours: Hours): string {
+  const summary = hours.summary.trim();
+  if (summary) return summary;
+  const listed = scheduleRows(hours)
+    .map((row) => `${row.label} ${row.value}`)
+    .join(" · ");
+  return listed || "Hours coming soon";
+}
+
+/** One sentence for previews, built from the weekly schedule. */
+export function hoursPreviewLine(hours: Hours): string {
+  const open = scheduleRows(hours).filter((row) => row.value !== "Closed");
+  if (open.length === 0) {
+    const summary = hours.summary.trim();
+    return summary ? `We're open ${summary}.` : "Call during the day and we'll share today's hours.";
+  }
+  const parts = open.map((row) => `${row.label} ${row.value.replace(/12 PM/g, "noon").replace(/12 AM/g, "midnight")}`);
+  if (parts.length === 1) return `We're open ${parts[0]}.`;
+  return `We're open ${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}.`;
+}
+
+/** Short open/closed line for the hours pill. Never claims hours are missing when a schedule exists. */
+export function statusLabel(now: Date, input: ShopClockInput): { label: string; tone: StatusTone } {
+  const status = getShopStatus(now, input);
+
+  if (status.isOpen === true) {
+    const until = status.todayWindow?.split("–")[1]?.trim();
+    return { label: until ? `Open now · until ${until}` : "Open now", tone: "open" };
+  }
+
+  if (status.isOpen === false) {
+    const next = nextOpeningLabel(now, input.hours);
+    return { label: next ? `Closed now · ${next}` : "Closed now", tone: "closed" };
+  }
+
+  return { label: hoursFallback(input.hours), tone: "neutral" };
 }

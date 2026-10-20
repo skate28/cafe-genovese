@@ -1,6 +1,7 @@
 import { site } from "@/content/site";
 import type { MenuItem, Weekday } from "@/content/types";
 import { getMenu, visibleItem } from "@/lib/menu";
+import { offerPrice } from "@/lib/money";
 import { safeHref } from "@/lib/ordering";
 import { heroPhoto, logoPhoto } from "@/lib/photos";
 import { getSiteUrl } from "@/lib/site-url";
@@ -49,11 +50,13 @@ function restaurantMenu(url: string) {
             name: item.name.trim(),
           };
           if (description) entry.description = description;
-          if (typeof item.price === "number" && Number.isFinite(item.price)) {
+          const price = typeof item.price === "number" ? offerPrice(item.price) : null;
+          if (price) {
             entry.offers = {
               "@type": "Offer",
-              price: item.price,
+              price,
               priceCurrency: "USD",
+              ...(item.priceFrom ? { description: "Starting price" } : {}),
             };
           }
           return entry;

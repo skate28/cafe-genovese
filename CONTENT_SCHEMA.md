@@ -30,9 +30,9 @@ Content owns `src/content/site.ts` and `public/images/`. Replace `site.ts` whole
 | `phone` | Every call button | — |
 | `afterHoursPhone` | Used only when `features.aiPhone` is live | preview card |
 | `textNumber` | Used only when `features.textPreorders` is live | no `sms:` links |
-| `closedNotice` | Shown with the hours card while hours are unconfirmed | — |
-| `hours` | Open/closed pill (America/New_York) and the weekly table, today highlighted | “To be confirmed” |
-| `hours.summary` | Pill fallback and footer | “Hours coming soon” |
+| `closedNotice` | Shown on the hours card only while the cafe is closed | hidden |
+| `hours` | Weekly table, today highlighted. The pill starts as `hours.summary`, then shows open/closed in America/New_York | em dash |
+| `hours.summary` | Pill text before the live clock, and the footer | schedule, or “Hours coming soon” only when nothing is set |
 | `priceRange`, `paymentNote` | Small lines on the hours card | hidden |
 | `orderingLinks[]` | Order section. Invalid or blank hrefs are dropped | section hidden |
 | `socials[]`, `extraLinks[]` | Footer | hidden |
@@ -40,8 +40,8 @@ Content owns `src/content/site.ts` and `public/images/`. Replace `site.ts` whole
 | `faq[]` | Accordion | section hidden |
 | `menuNote` | Under the menu heading | hidden |
 | `menu[]` | Tabbed menu. Read through `getMenu()` / `menuView()` | section hidden |
-| `menu[].items[].price` | Price with a dotted leader. Leave unset until confirmed | price omitted |
-| `menu[].items[].placeholder` | Shown only while the whole menu is still a sample. Hidden once any real item exists. Omitted from JSON-LD | — |
+| `menu[].items[].price` | Right-aligned price. Under $1 renders as cents (`75¢`). `priceFrom` adds a plus. Included as an Offer in JSON-LD | price omitted |
+| `menu[].items[].placeholder` | Never shown, and omitted from JSON-LD | — |
 | `photos[]`, `heroImage` | Hero, story, favorites, gallery, visit. Logo category is the header mark, not the gallery | illustrated hero, empty gallery note |
 | `palette` | CSS variables | fallbacks in `globals.css` |
 | `about` | Our story | section hidden |

@@ -17,8 +17,8 @@ npm run build
 All business copy, hours, menu, links, and photos live in `src/content/site.ts`. Types live in `src/content/types.ts` (the Catullo's Italian contract, plus one optional field). Content can replace `site.ts` wholesale. Components read the menu through `getMenu()` / `menuView()` in `src/lib/menu.ts`.
 
 - Empty strings, empty arrays, and `null` hide the matching UI.
-- `menu[].items[].placeholder: true` marks stand-in dishes. They render only while every item is still a placeholder, under a “Sample menu” label, and they are left out of JSON-LD. They hide once a real item exists. Leave `price` unset until a price is confirmed.
-- Hours with null `openTime` / `closeTime` show as “To be confirmed”. The open/closed pill stays neutral until a real window is set. Timezone is `America/New_York`.
+- `menu[].items[].placeholder: true` marks stand-in dishes. They are omitted from the page and from JSON-LD. Leave `price` unset to hide the price. `priceFrom` renders as a starting price (`$8.99+`). Amounts under $1 render in cents (`75¢`).
+- The hours pill shows `hours.summary` in the server HTML, then the live open/closed status in `America/New_York` after the page loads. A day without a window renders as an em dash.
 - `orderingLinks` renders only valid links present in content. An empty array hides the order section.
 - `photos` renders only files referenced as `/images/...`. An empty array hides the gallery. Do not add stock or generated food photos. Photo `credit` values stay in content and are not rendered.
 

@@ -21,7 +21,7 @@ Phones get a sticky Call / Menu / Directions bar.
 
 `src/lib/menu.ts`. `getMenu()` is the only read of `site.menu`. `menuView()` decides what the page shows. A future admin editor should replace `getMenu()` and leave the components alone.
 
-Placeholder items are shown, labeled as a sample, only when the menu has no confirmed items. JSON-LD uses `visibleItem()`, which drops placeholders and any item without a confirmed price stays unpriced.
+Placeholder items are never rendered. JSON-LD uses `visibleItem()`, which drops placeholders. An item with a numeric `price` gets an Offer; an item without one stays unpriced.
 
 ## Feature flags
 

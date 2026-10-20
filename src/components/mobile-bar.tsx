@@ -11,7 +11,7 @@ import { menuView } from "@/lib/menu";
 export function MobileBar() {
   const tel = telHref(site.phone);
   const directions = directionsHref(site);
-  const hasMenu = menuView(site).categories.length > 0;
+  const hasMenu = menuView(site).length > 0;
   if (!tel && !directions) return null;
 
   return (

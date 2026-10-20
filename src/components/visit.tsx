@@ -2,12 +2,11 @@ import { Bike, MapPin, Phone, ShoppingBag } from "lucide-react";
 
 import { HoursList } from "@/components/hours-list";
 import { Reveal } from "@/components/reveal";
-import { ShopStatusPill } from "@/components/shop-status";
+import { ClosedNotice, ShopStatusPill } from "@/components/shop-status";
 import { buttonPrimary, buttonSecondary, container, eyebrow, sectionTitle } from "@/components/styles";
 import { site } from "@/content/site";
 import { cn } from "@/lib/cn";
 import { phoneLabel, telHref } from "@/lib/contact";
-import { hoursConfirmed } from "@/lib/hours";
 import { directionsHref, mapEmbedSrc } from "@/lib/maps";
 import { orderingLinks } from "@/lib/ordering";
 import { photosOfCategory } from "@/lib/photos";
@@ -32,7 +31,7 @@ export function Visit() {
   const directions = directionsHref(site);
   const map = mapEmbedSrc(site);
   const storefront = photosOfCategory("storefront", site.photos)[0];
-  const confirmed = hoursConfirmed(site.hours);
+  const initialNow = new Date().toISOString();
   const clock = {
     hours: site.hours,
     closedNotice: site.closedNotice,
@@ -80,13 +79,8 @@ export function Visit() {
               <div className="mt-5">
                 <ShopStatusPill input={clock} />
               </div>
-              {!confirmed && (
-                <p className="mt-4 text-sm leading-relaxed text-ink/65">
-                  {site.hours.summary.trim() || "Hours coming soon"}. The weekly schedule is a placeholder until the cafe confirms it.
-                </p>
-              )}
-              <HoursList hours={site.hours} />
-              {site.closedNotice.trim() && !confirmed && <p className="mt-4 text-sm text-ink/60">{site.closedNotice}</p>}
+              <ClosedNotice input={clock} initialNow={initialNow} notice={site.closedNotice} className="mt-4 text-sm leading-relaxed text-ink/65" />
+              <HoursList hours={site.hours} initialNow={initialNow} />
               {site.paymentNote.trim() && <p className="mt-4 text-sm text-ink/60">{site.paymentNote}</p>}
               {site.priceRange.trim() && <p className="mt-2 text-sm text-ink/60">Price range {site.priceRange}</p>}
             </div>

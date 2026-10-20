@@ -13,13 +13,12 @@ import type { SiteContent } from "./types";
  * sells coffee beans the cafe isn't known to sell, quotes made-up reviews and has a contact form that
  * throws messages away. Ownership unknown (see research_brief.md). Never link it or copy from it.
  *
- * Prices: OMITTED everywhere. Three printings of the cafe's menu exist in customer photos, none dated,
- * with different prices (e.g. Hamburger $6.79 / $8.29 / $10.59); Yelp and aggregators transcribe the
- * older ones, and cafegenovese[.]com invents its own. Nothing is confirmed current (2024+).
- * TODO(Leads): owner confirms the current menu and prices.
+ * Menu + prices: CONFIRMED from the cafe's current printed breakfast and lunch menus, photographed in
+ * the cafe on 2026-10-20 (single source of truth; supersedes Yelp/aggregator/older printings).
  *
- * Ordering: dine-in + takeout (Visit St. Augustine, Tripadvisor, Apple Maps). No online ordering,
- * DoorDash, Uber Eats or Grubhub store found. No texting. `features` are pitch previews only.
+ * Ordering: dine-in + call-ahead takeout. The printed menu says "Call Ahead & Take Out Orders Welcome!"
+ * (verified 2026-10-20). No online ordering, DoorDash, Uber Eats or Grubhub store found. No texting.
+ * `features` (text pre-orders, AI phone, catering) are "Coming soon" pitch previews only.
  *
  * Photos: real customer photos from the cafe's own Google Maps listing (downloaded, not hotlinked).
  * Pitch use only until the owner approves; sources in photo-sources.md. No logo found (no artwork
@@ -102,15 +101,15 @@ export const site: SiteContent = {
     },
   },
 
-  // Restaurantji and Checkle "$"; MenuPix "$$". TODO(Leads): confirm.
+  // Printed menu 2026-10-20: breakfast plates $8.99–15.99, lunch $8.59–13.99. Restaurantji/Checkle "$",
+  // MenuPix "$$". TODO(Leads): confirm "$" vs "$$".
   priceRange: "$",
   // Apple Maps: accepts contactless payments. Not shown until the owner confirms cards/cash.
   paymentNote: "",
 
-  // Takeout is verified (Visit St. Augustine "take your breakfast or lunch to go", Tripadvisor, Apple
-  // Maps). Phone is the only ordering channel found; no online/delivery store exists.
-  // TODO(Leads): owner confirms call-ahead takeout.
-  orderingLinks: [{ label: "Call to order", href: "tel:+19048290707", kind: "phone" }],
+  // Call-ahead takeout VERIFIED: the current printed menu says "Call Ahead & Take Out Orders Welcome!"
+  // (photographed 2026-10-20). Phone is the only ordering channel; no online/delivery store exists.
+  orderingLinks: [{ label: "Call ahead for takeout", href: "tel:+19048290707", kind: "phone" }],
 
   // EMPTY on purpose. Google, Apple Maps and Nextdoor list facebook.com/CafeGenovese, but on 2026-10-20 it
   // shows "This content isn't available right now" signed out (the same check loads other restaurant
@@ -129,8 +128,8 @@ export const site: SiteContent = {
   testimonials: [],
 
   // Verified answers only.
-  // TODO(Leads): owner-only FAQs: catering / large breakfast orders, gluten-free options, pork roll
-  // (one review mentions it), Veterans Day breakfast (a Google Q&A asks about it), outdoor seating use.
+  // TODO(Leads): owner-only FAQs: catering / large breakfast orders, gluten-free options,
+  // Veterans Day breakfast (a Google Q&A asks about it), outdoor seating use.
   faq: [
     {
       question: "What are your hours?",
@@ -143,8 +142,9 @@ export const site: SiteContent = {
         "No. Come in and take a seat anywhere: at the counter facing the grill or at one of our tables.",
     },
     {
-      question: "Can I get my order to go?",
-      answer: "Yes. Call (904) 829-0707 to order to go.",
+      // Printed menu: "Call Ahead & Take Out Orders Welcome!"
+      question: "Can I call ahead for takeout?",
+      answer: "Yes. Call-ahead and take-out orders are welcome. Call (904) 829-0707 and we'll have it ready.",
     },
     {
       // Visit St. Augustine: "serving breakfast all day". TODO(Leads): confirm.
@@ -154,7 +154,7 @@ export const site: SiteContent = {
     {
       question: "Do you have a kids' menu?",
       answer:
-        "Yes. Kids can get pancakes or eggs with bacon or sausage for breakfast, or chicken tenders, a hamburger, grilled cheese or a hot dog for lunch, each with a drink.",
+        "Yes. Kids Breakfast is 2 pancakes or eggs with bacon or sausage and a drink. For lunch, kids pick chicken tenders, a hamburger, grilled cheese, a hot dog or peanut butter and jelly, with fries or fruit and a drink. Each is $8.99.",
     },
     {
       question: "Where exactly are you?",
@@ -164,169 +164,182 @@ export const site: SiteContent = {
   ],
 
   menuNote:
-    "Breakfast is served all day, cooked to order on our grill. Menu items may change; call (904) 829-0707 for prices and today's specials.",
+    "Cooked to order on our grill. We serve Boar's Head luncheon meat. Call ahead and take-out orders welcome: (904) 829-0707.",
 
-  // Item names/descriptions from the cafe's own printed menu: four customer photos of the laminated
-  // breakfast + lunch menu (three printings over time, compiled by Restaurantji from listing photos),
-  // cross-checked against the transcriptions on Yelp (breakfast + lunch) and menu-page/placejoys. Section
-  // names follow the printed menu. Lightly edited; nothing added. Item lists agree across all printings;
-  // the newest lunch printing adds Tilapia and per-item specialty prices. Favorites = Google review topics
-  // (corned beef hash 9, burgers 10, grits 5) + reviews. Prices omitted: no printing or transcription is
-  // dated, and the three printings disagree (e.g. Hamburger $6.79 / $8.29 / $10.59).
-  // Source per section: research_brief.md §2. TODO(Leads): owner confirms the current menu + prices.
+  // SOURCE OF TRUTH: the cafe's current printed breakfast and lunch menus, photographed in the cafe by
+  // Nick on 2026-10-20 (owner-menu/breakfast.jpg, owner-menu/lunch.jpg). Categories, names, descriptions
+  // and prices are as printed (light case/punctuation edits only). Variant and add-on prices go in the
+  // description because MenuItem has no variant field. Printed item numbers use `number`.
+  // Beverages are printed on both menus, with identical prices, and appear once here.
+  // `signature` = most-mentioned dishes in reviews (corned beef hash, grit bowl, pancakes, Reuben).
   menu: [
     {
-      id: "breakfast-specials",
-      name: "Breakfast Specials",
-      description:
-        "Plates come with your choice of grits, home fries or hash browns, plus toast, an English muffin, a bagel or a biscuit.",
+      id: "specials",
+      name: "Specials",
       items: [
-        { id: "eggs-pancakes", name: "Two Eggs & Two Pancakes", description: "With two strips of bacon or two sausage patties." },
-        { id: "two-eggs", name: "Two Eggs", description: "Any style, with home fries, grits or hash browns and your choice of bread. Add bacon, sausage or ham." },
-        { id: "grit-bowl", signature: true, name: "Grit Bowl", description: "Two eggs over grits with cheese, bacon, sausage or ham, onions and bell peppers." },
-        { id: "corned-beef-hash", signature: true, name: "Corned Beef Hash & Eggs", description: "Crispy corned beef hash with two eggs, home fries or grits, and your choice of bread." },
-        { id: "steak-eggs", name: "Steak & Eggs", description: "A 5 oz sirloin steak with two eggs, grits, home fries or hash browns, and your choice of bread." },
-        { id: "three-pancakes", signature: true, name: "Three Pancakes", description: "Add bacon or sausage, or add chocolate chips, pecans, fresh strawberries or blueberries." },
-        { id: "french-toast", name: "French Toast", description: "Topped with powdered sugar and cinnamon. Add bacon or sausage." },
-        { id: "belgian-waffle", name: "Belgian Waffle", description: "Add bacon or sausage, or add chocolate chips, pecans, fresh strawberries or blueberries." },
+        { id: "special-1", number: 1, name: "2 Eggs, 2 Pancakes & Bacon or Sausage", description: "2 eggs, 2 pancakes, 2 strips of bacon or 2 sausage patties.", price: 11.99 },
+        { id: "special-2", number: 2, name: "2 Eggs", description: "With home fries, grits or hash browns, plus toast, English muffin, bagel or biscuit. With bacon or sausage $11.79 · With ham $12.29.", price: 9.79 },
+        { id: "special-3", number: 3, signature: true, name: "Grit Bowl", description: "2 eggs, grits, cheese, bacon, sausage or ham, onions and bell peppers.", price: 12.29 },
+        { id: "special-4", number: 4, signature: true, name: "Corn Beef Hash", description: "Served with 2 eggs, home fries or grits, plus toast, English muffin, bagel or biscuit.", price: 12.99 },
+        { id: "special-5", number: 5, name: "2 Eggs with 5 oz Sirloin Steak", description: "With toast, English muffin, bagel or biscuit. With grits, home fries or hash browns $14.99.", price: 13.99 },
+        { id: "special-6", number: 6, signature: true, name: "Three Pancakes", description: "With bacon or sausage $11.99. Add chocolate chips, pecans, fresh strawberries or blueberries +$1.50.", price: 9.99 },
+        { id: "special-7", number: 7, name: "French Toast", description: "Topped with powdered sugar and cinnamon. With bacon or sausage $12.59.", price: 10.59 },
+        { id: "special-8", number: 8, name: "Belgian Waffle", description: "With bacon or sausage $10.99. Add chocolate chips, pecans, fresh strawberries or blueberries +$1.50.", price: 8.99 },
+      ],
+    },
+    {
+      id: "omelets",
+      name: "Omelets",
+      description:
+        "Includes grits, home fries or hash browns, plus toast, English muffin, bagel or biscuit. Substitute fruit for $2.00.",
+      items: [
+        { id: "omelet-1", number: 1, name: "Three Eggs and Cheese", price: 11.59 },
+        { id: "omelet-2", number: 2, name: "Three Eggs and Cheese with Meat", description: "With bacon, sausage or ham.", price: 12.79 },
+        { id: "omelet-3", number: 3, name: "Three Eggs and Vegetables", description: "With mushrooms, tomatoes, onions and bell peppers.", price: 12.79 },
+        { id: "omelet-4", number: 4, name: "Three Eggs, Vegetables and Meat", description: "With bacon, sausage, ham, tomatoes, onions and bell peppers.", price: 13.79 },
       ],
     },
     {
       id: "complete-breakfast",
       name: "Complete Breakfast",
       items: [
-        { id: "complete-breakfast", signature: true, name: "Complete Breakfast", description: "Two eggs, two pancakes, two strips of bacon or two sausage patties, grits, home fries or hash browns, and coffee or tea." },
-      ],
-    },
-    {
-      id: "omelets",
-      name: "Three-Egg Omelets",
-      description:
-        "With grits, home fries or hash browns, plus toast, an English muffin, a bagel or a biscuit. Fruit can be swapped in for a small upcharge.",
-      items: [
-        { id: "omelet-cheese", name: "Cheese Omelet" },
-        { id: "omelet-cheese-meat", name: "Cheese Omelet with Meat", description: "With bacon, sausage or ham." },
-        { id: "omelet-veggie", name: "Veggie Omelet", description: "Mushrooms, tomatoes, onions and bell peppers." },
-        { id: "omelet-veggie-meat", name: "Veggie Omelet with Meat", description: "Bacon, sausage or ham with tomatoes, onions and bell peppers." },
+        { id: "complete-breakfast", signature: true, name: "Complete Breakfast", description: "2 eggs, 2 pancakes, choice of 2 strips of bacon or 2 grilled sausage patties, choice of grits, home fries or hash browns, and coffee or tea. Juice or milk add $1.00.", price: 15.99 },
       ],
     },
     {
       id: "breakfast-sandwiches",
       name: "Breakfast Sandwiches",
-      description: "Two-egg sandwiches on toast, an English muffin, a bagel or a biscuit.",
+      description: "2-egg sandwich on toast, English muffin, bagel or biscuit.",
       items: [
-        { id: "egg-sandwich", name: "Egg Sandwich" },
-        { id: "egg-cheese-sandwich", name: "Egg & Cheese Sandwich" },
-        { id: "egg-cheese-meat-sandwich", name: "Egg & Cheese with Meat", description: "With bacon, sausage or ham." },
+        { id: "bsand-1", number: 1, name: "Egg", price: 5.79 },
+        { id: "bsand-2", number: 2, name: "Egg and Cheese", price: 6.79 },
+        { id: "bsand-3", number: 3, name: "Egg and Cheese with Meat", description: "With bacon, sausage or ham.", price: 8.99 },
+      ],
+    },
+    {
+      id: "kids-breakfast",
+      name: "Kids Breakfast",
+      items: [
+        { id: "kids-breakfast", name: "Kids Breakfast", description: "2 pancakes or eggs, bacon or sausage, and a drink.", price: 8.99 },
       ],
     },
     {
       id: "breakfast-sides",
-      name: "Breakfast Sides & Kids",
+      name: "Breakfast Sides",
       items: [
-        { id: "side-two-eggs", name: "Two Eggs Any Style" },
-        { id: "side-potatoes-grits", name: "Grits, Home Fries or Hash Browns", description: "Add cheese." },
-        { id: "side-bacon-sausage", name: "Bacon or Sausage" },
-        { id: "side-ham", name: "Ham" },
-        { id: "side-sirloin", name: "5 oz Sirloin Steak" },
-        { id: "side-corned-beef-hash", name: "Corned Beef Hash" },
-        { id: "side-pancake", name: "Pancake" },
-        { id: "side-toast", name: "Toast, English Muffin or Biscuit" },
-        { id: "side-fruit", name: "Fruit" },
-        { id: "side-bagel", name: "Bagel", description: "Plain or with cream cheese." },
-        { id: "side-extras", name: "Add-Ons", description: "Cheese, tomatoes, onions, bell peppers or mushrooms." },
-        { id: "kids-breakfast", name: "Kids Breakfast", description: "Two pancakes or eggs with bacon or sausage, and a drink." },
+        { id: "bside-eggs", name: "2 Eggs Any Style", price: 3.49 },
+        { id: "bside-potatoes", name: "Grits, Home Fries or Hash Browns", description: "With cheese $4.79.", price: 3.99 },
+        { id: "bside-bacon-sausage", name: "Bacon or Sausage", price: 4.29 },
+        { id: "bside-ham", name: "Ham", price: 4.59 },
+        { id: "bside-sirloin", name: "5 oz Sirloin Steak", price: 9.59 },
+        { id: "bside-hash", name: "Corn Beef Hash", price: 4.99 },
+        { id: "bside-pancake", name: "Pancake", price: 3.99 },
+        { id: "bside-toast", name: "Toast, English Muffin or Biscuit", price: 2.29 },
+        { id: "bside-fruit", name: "Fruit", price: 4.49 },
+        { id: "bside-bagel", name: "Bagel", description: "With cream cheese $3.74.", price: 2.99 },
+        { id: "bside-cream-cheese", name: "Cream Cheese", price: 0.75 },
+        { id: "bside-addons", name: "Cheese, Tomatoes, Onions, Bell Peppers or Mushrooms", description: "Each.", price: 0.99 },
       ],
     },
     {
       id: "appetizers",
       name: "Appetizers",
       items: [
-        { id: "buffalo-wings", name: "Buffalo Wings (10)" },
-        { id: "chicken-tenders", name: "Chicken Tenders" },
-        { id: "buffalo-tenders", name: "Buffalo Tenders" },
-        { id: "cheese-sticks", name: "Cheese Sticks" },
+        { id: "app-chicken-tenders", name: "Chicken Tenders", price: 11.99 },
+        { id: "app-buffalo-tenders", name: "Buffalo Tenders", price: 12.99 },
+        { id: "app-cheese-sticks", name: "Cheese Sticks", price: 7.99 },
       ],
     },
     {
       id: "salads",
       name: "Fresh Salads",
       description:
-        "Dressings: ranch, blue cheese, French, balsamic vinaigrette, honey mustard, Italian or raspberry vinaigrette.",
+        "Dressings: ranch, blue cheese, French, balsamic vinaigrette, honey mustard, Italian, raspberry vinaigrette.",
       items: [
-        { id: "chef-salad", name: "Chef Salad", description: "Ham, turkey, cheese, bacon, tomatoes and egg." },
-        { id: "chicken-caesar", name: "Chicken Caesar Salad", description: "Romaine, chicken breast and Parmesan." },
-        { id: "carolina-salad", name: "Carolina Salad", description: "Romaine with chicken tenders or grilled, Cajun or BBQ chicken, cheese, bacon, pecans and tomatoes." },
-        { id: "buffalo-chicken-salad", name: "Buffalo Chicken Salad", description: "With blue cheese crumbles and tomatoes." },
-        { id: "mandarin-salad", name: "Mandarin Salad with Chicken", description: "Chicken tenders or grilled chicken, feta, pecans, dried cranberries and mandarin oranges." },
+        { id: "chef-salad", name: "Chef Salad", description: "With ham, turkey, cheese, bacon, tomatoes and egg.", price: 13.59 },
+        { id: "chicken-caesar", name: "Chicken Caesar Salad", description: "With romaine lettuce, chicken breast and Parmesan cheese.", price: 12.99 },
+        { id: "carolina-salad", name: "Carolina Salad", description: "With romaine lettuce, chicken tenders, grilled, Cajun or BBQ chicken, cheese, bacon, pecans and tomatoes.", price: 13.29 },
+        { id: "buffalo-chicken-salad", name: "Buffalo Chicken Salad", description: "With blue cheese crumbles and tomatoes.", price: 13.29 },
+        { id: "mandarin-salad", name: "Mandarin Salad", description: "With chicken tenders or grilled chicken, feta cheese, pecans, Craisins and mandarin oranges.", price: 13.29 },
       ],
     },
     {
       id: "burgers-sandwiches",
       name: "Burgers & Sandwiches",
       description:
-        "Served with fries, onion rings, steamed broccoli, green beans or chips. \"All the way\" means lettuce, tomato, onion, pickles, mustard and mayo.",
+        "All burgers and sandwiches are served with your choice of fries, onion rings, steamed broccoli or chips. \"All the Way\" means lettuce, tomato, onion, pickles, mustard and mayonnaise. We serve Boar's Head luncheon meat.",
       items: [
-        { id: "hamburger", name: "Hamburger" },
-        { id: "cheeseburger", name: "Cheeseburger" },
-        { id: "bacon-cheeseburger", name: "Bacon Cheeseburger" },
-        { id: "alpine-burger", name: "Alpine Burger" },
-        { id: "smoke-house-burger", name: "Smoke House Burger" },
-        { id: "black-and-blue-burger", name: "Black and Blue Burger" },
-        { id: "patty-melt", name: "Patty Melt", description: "Beef patty with Swiss cheese and grilled onion on grilled rye." },
-        { id: "grilled-cheese", name: "Grilled Cheese", description: "Add ham." },
-        { id: "blt", name: "BLT", description: "Bacon, lettuce and tomato." },
-        { id: "turkey-cheese", name: "Turkey Breast with Cheese" },
-        { id: "turkey-blt", name: "Turkey BLT" },
-        { id: "chicken-tuna-salad-sandwich", name: "Chicken or Tuna Salad Sandwich" },
-        { id: "mahi-sandwich", name: "Mahi Sandwich", description: "Lemon pepper or blackened." },
+        { id: "hamburger", name: "Hamburger", price: 12.29 },
+        { id: "cheeseburger", name: "Cheeseburger", price: 12.79 },
+        { id: "alpine-burger", name: "Alpine Burger", price: 13.29 },
+        { id: "bacon-cheeseburger", name: "Bacon Cheeseburger", price: 13.29 },
+        { id: "smoke-house-burger", name: "Smoke House Burger", price: 13.59 },
+        { id: "pattie-melt", name: "Pattie Melt", description: "Beef pattie with Swiss cheese and grilled onion on grilled rye bread.", price: 12.99 },
+        { id: "black-and-blue-burger", name: "Black and Blue Burger", price: 13.29 },
+        { id: "grilled-cheese", name: "Grilled Cheese", price: 8.59 },
+        { id: "grilled-cheese-ham", name: "Grilled Cheese with Ham", price: 10.99 },
+        { id: "blt", name: "\"BLT\"", description: "Bacon, lettuce and tomato.", price: 10.99 },
+        { id: "turkey-cheese", name: "Turkey Breast with Cheese", price: 12.29 },
+        { id: "turkey-blt", name: "Turkey \"BLT\"", price: 12.99 },
+        { id: "chicken-tuna-salad", name: "Chicken or Tuna Salad", price: 12.29 },
+        { id: "mahi-sandwich", name: "Mahi Sandwich", description: "Lemon pepper or blackened.", price: 13.99 },
       ],
     },
     {
       id: "specialties",
       name: "Specialties",
-      description: "Hot sandwiches and hoagies. Each specialty comes with one side.",
+      description: "Each specialty includes one side.",
       items: [
-        { id: "tilapia", name: "Tilapia", description: "Lemon pepper or blackened." },
-        { id: "reuben", signature: true, name: "Reuben" },
-        { id: "cheese-steak", name: "Cheese Steak", description: "With bell peppers, onions and provolone." },
-        { id: "chicken-philly", name: "Chicken Philly", description: "With peppers, onions and provolone." },
-        { id: "italian-sausage", name: "Italian Sausage Hoagie", description: "Bell peppers, onions and provolone on a hoagie roll." },
-        { id: "meatball-hoagie", name: "Meatball Hoagie" },
-        { id: "chicken-parmesan", name: "Chicken Parmesan", description: "With provolone." },
-        { id: "crispy-chicken-club", name: "Crispy Chicken Club", description: "With Swiss cheese and bacon." },
-        { id: "buffalo-chicken", name: "Buffalo Chicken", description: "With Jack cheese." },
-        { id: "grilled-cajun-chicken", name: "Grilled or Cajun Chicken", description: "With Jack cheese." },
-        { id: "hickory-chicken", name: "Hickory Chicken", description: "With BBQ sauce, cheddar and bacon." },
-        { id: "grilled-roast-beef", name: "Grilled Roast Beef", description: "With cheddar." },
-        { id: "french-dip", name: "French Dip" },
+        { id: "tilapia", name: "Tilapia", description: "Lemon pepper or blackened.", price: 12.99 },
+        { id: "italian-sausage", name: "Italian Sausage Hoagie", description: "Italian sausage, bell peppers, onions and provolone cheese on a hoagie.", price: 12.99 },
+        { id: "meatball-hoagie", name: "Meatball Hoagie", description: "With provolone cheese.", price: 12.99 },
+        { id: "chicken-parmesan", name: "Chicken Parmesan", description: "With provolone cheese.", price: 12.99 },
+        { id: "crispy-chicken-club", name: "Crispy Chicken Club", description: "With Swiss cheese and bacon.", price: 12.99 },
+        { id: "buffalo-chicken", name: "Buffalo Chicken", description: "With Jack cheese.", price: 12.99 },
+        { id: "grilled-cajun-chicken", name: "Grilled or Cajun Chicken", description: "With Jack cheese.", price: 12.99 },
+        { id: "reuben", signature: true, name: "Reuben", price: 13.99 },
+        { id: "cheese-steak", name: "Cheese Steak", description: "With bell peppers, onions and provolone cheese.", price: 12.99 },
+        { id: "grilled-roast-beef", name: "Grilled Roast Beef", description: "With cheddar cheese.", price: 13.99 },
+        { id: "hickory-chicken", name: "Hickory Chicken", description: "With BBQ sauce, cheddar cheese and bacon.", price: 12.99 },
+        { id: "chicken-philly", name: "Chicken Philly", description: "With peppers, onions and provolone.", price: 12.99 },
+        { id: "french-dip", name: "French Dip", price: 13.99 },
       ],
     },
     {
-      id: "lunch-sides-kids",
-      name: "Lunch Sides & Kids",
+      id: "kids-lunch",
+      name: "Kids Lunch",
+      description: "Includes fries or fruit and a drink. Your choice, only $8.99 each.",
       items: [
-        { id: "fries", name: "Fries" },
-        { id: "onion-rings", name: "Onion Rings" },
-        { id: "house-salad", name: "House Salad" },
-        { id: "macaroni-salad", name: "Macaroni Salad" },
-        { id: "lunch-fruit", name: "Fruit" },
-        { id: "broccoli", name: "Steamed Broccoli" },
-        { id: "green-beans", name: "Green Beans" },
-        { id: "chips", name: "Chips" },
-        { id: "kids-lunch", name: "Kids Lunch", description: "Chicken tenders, a hamburger, grilled cheese or a hot dog, with fries or fruit and a drink." },
+        { id: "kids-chicken-tenders", name: "Chicken Tenders", price: 8.99 },
+        { id: "kids-hamburger", name: "Hamburger", price: 8.99 },
+        { id: "kids-grilled-cheese", name: "Grilled Cheese", price: 8.99 },
+        { id: "kids-hot-dog", name: "Hot Dog", price: 8.99 },
+        { id: "kids-pbj", name: "Peanut Butter and Jelly", price: 8.99 },
       ],
     },
     {
-      id: "drinks",
-      name: "Drinks",
+      id: "lunch-sides",
+      name: "Sides",
+      items: [
+        { id: "side-fruit", name: "Fruit", price: 4.49 },
+        { id: "side-house-salad", name: "House Salad", price: 4.29 },
+        { id: "side-macaroni-salad", name: "Macaroni Salad", price: 3.99 },
+        { id: "side-onion-rings", name: "Onion Rings", price: 4.59 },
+        { id: "side-fries", name: "Fries", price: 4.29 },
+        { id: "side-chips", name: "Chips", price: 1.99 },
+        { id: "side-broccoli", name: "Broccoli", price: 4.29 },
+        { id: "side-cottage-cheese", name: "Cottage Cheese", price: 3.99 },
+      ],
+    },
+    {
+      id: "beverages",
+      name: "Beverages",
       description: "Free refills on coffee, tea and soda.",
       items: [
-        { id: "coffee", name: "Coffee" },
-        { id: "tea", name: "Hot or Iced Tea" },
-        { id: "milk-juice", name: "Milk or Juice" },
-        { id: "soda", name: "Soda", description: "Coke products." },
-        { id: "bottled-water", name: "Bottled Water" },
+        { id: "coffee-tea", name: "Coffee, Hot or Iced Tea", price: 3.29 },
+        { id: "soda", name: "Soda", description: "Coke products.", price: 3.29 },
+        { id: "bottled-water", name: "Bottled Water", price: 1.75 },
+        { id: "milk-juice", name: "Milk or Juice", description: "Small $3.49 · Large $4.49.", price: 3.49, priceFrom: true },
       ],
     },
   ],
@@ -402,8 +415,8 @@ export const site: SiteContent = {
       { title: "Seat yourself", body: "Grab any open table, or a stool at the counter facing the grill." },
       // Visit St. Augustine.
       { title: "Breakfast all day", body: "Pancakes at noon? Go for it. Lunch starts alongside breakfast." },
-      // Visit St. Augustine, Tripadvisor, Apple Maps.
-      { title: "To go", body: "Call (904) 829-0707 to order to go." },
+      // Printed menu: "Call Ahead & Take Out Orders Welcome!"
+      { title: "Call ahead", body: "Call-ahead and take-out orders are welcome. Call (904) 829-0707." },
       // Visit St. Augustine ("small industrial/office park"); Nextdoor review (easy to miss).
       { title: "Finding us", body: "We're inside a small office park on County Road 210 W, just east of I-95. Suite 108." },
     ],
