@@ -95,14 +95,6 @@ body {
   background-size: 22px 22px;
 }
 
-.ticket {
-  background-image: radial-gradient(circle at 0 18px, transparent 10px, var(--cg-paper) 11px),
-    radial-gradient(circle at 100% 18px, transparent 10px, var(--cg-paper) 11px);
-  background-size: 51% 100%;
-  background-repeat: no-repeat;
-  background-position: left, right;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
