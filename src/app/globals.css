@@ -2,18 +2,17 @@
 
 /*
   Fallbacks match src/content/site.ts palette. Live values are set on <html>.
-  Morning cafe: oat linen page, espresso text, caramel buttons, herb accents,
-  honey highlights, dark-roast bands.
+  Navy storefront letters, warm plate orange, mustard, and oat linen.
 */
 :root {
-  --cg-ink: #2a211c;
-  --cg-brand: #9a4524;
-  --cg-brand-deep: #6e3016;
-  --cg-herb: #2f5d45;
-  --cg-honey: #e4b33a;
-  --cg-roast: #231c17;
-  --cg-linen: #f4efe6;
-  --cg-paper: #fffcf8;
+  --cg-ink: #1e2a38;
+  --cg-brand: #24476b;
+  --cg-brand-deep: #183552;
+  --cg-herb: #e0843e;
+  --cg-honey: #d9a441;
+  --cg-roast: #1b2f45;
+  --cg-linen: #fbf6ea;
+  --cg-paper: #ffffff;
   color-scheme: light;
 }
 
@@ -29,6 +28,7 @@
   --color-line: color-mix(in oklab, var(--cg-ink) 12%, transparent);
   --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-display-face), Fraunces, Georgia, serif;
+  --font-sign: var(--font-sign-face), Georgia, "Times New Roman", serif;
   --animate-marquee: marquee 42s linear infinite;
   --animate-sun: sunspin 80s linear infinite;
 }

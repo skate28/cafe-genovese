@@ -22,6 +22,12 @@ const KIND_ICON = {
 
 export function Visit() {
   const links = orderingLinks(site);
+  const kinds = new Set(links.map((link) => link.kind));
+  const orderHeading = kinds.has("delivery")
+    ? "Order for pickup or delivery"
+    : kinds.has("online")
+      ? "Order online"
+      : "Call to order";
   const tel = telHref(site.phone);
   const directions = directionsHref(site);
   const map = mapEmbedSrc(site);
@@ -41,7 +47,7 @@ export function Visit() {
           <div className={container}>
             <Reveal>
               <p className={eyebrow}>Order</p>
-              <h2 className={cn(sectionTitle, "mt-4")}>Order for pickup or delivery</h2>
+              <h2 className={cn(sectionTitle, "mt-4")}>{orderHeading}</h2>
             </Reveal>
             <ul className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               {links.map((link) => {

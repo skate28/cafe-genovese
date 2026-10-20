@@ -26,7 +26,7 @@ export function Footer() {
             {logo && (
               <Image src={logo.src} alt={logo.alt} width={64} height={64} className="size-16 rounded-2xl object-cover ring-1 ring-linen/20" />
             )}
-            <Wordmark tone="linen" />
+            <Wordmark tone="cream" />
           </div>
           {site.tagline.trim() && <p className="mt-4 max-w-sm text-linen/70">{site.tagline}</p>}
         </div>

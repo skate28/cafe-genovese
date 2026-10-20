@@ -51,11 +51,11 @@ export function ShopStatusPill({ input, className }: { input: ShopClockInput; cl
       )}
     >
       <span className="relative flex size-2 shrink-0">
-        {tone === "open" && <span className="absolute inline-flex size-full animate-ping rounded-full bg-herb opacity-60" />}
+        {tone === "open" && <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-600 opacity-60" />}
         <span
           className={cn(
             "relative inline-flex size-2 rounded-full",
-            tone === "open" && "bg-herb",
+            tone === "open" && "bg-emerald-600",
             tone === "closed" && "bg-brand",
             tone === "neutral" && "bg-honey",
           )}

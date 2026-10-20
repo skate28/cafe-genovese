@@ -2,7 +2,7 @@
 
 Pitch site for Cafe Genovese, a family-run breakfast and lunch cafe at 1515 County Rd 210 W, Ste 108, St. Johns, FL 32259 · (904) 829-0707.
 
-Next.js (App Router), TypeScript, Tailwind CSS, framer-motion, lucide-react. Hours, menu, and ordering links in this repo are placeholders. See [CONTENT_SCHEMA.md](./CONTENT_SCHEMA.md) and [ARCHITECTURE.md](./ARCHITECTURE.md).
+Next.js (App Router), TypeScript, Tailwind CSS, framer-motion, lucide-react. Hours, the 77-item menu, photos, and the call-only ordering link live in `src/content/site.ts`. See [CONTENT_SCHEMA.md](./CONTENT_SCHEMA.md) and [ARCHITECTURE.md](./ARCHITECTURE.md).
 
 ```bash
 npm install
@@ -20,7 +20,7 @@ All business copy, hours, menu, links, and photos live in `src/content/site.ts`.
 - `menu[].items[].placeholder: true` marks stand-in dishes. They render only while every item is still a placeholder, under a “Sample menu” label, and they are left out of JSON-LD. They hide once a real item exists. Leave `price` unset until a price is confirmed.
 - Hours with null `openTime` / `closeTime` show as “To be confirmed”. The open/closed pill stays neutral until a real window is set. Timezone is `America/New_York`.
 - `orderingLinks` renders only valid links present in content. An empty array hides the order section.
-- `photos` renders only files referenced as `/images/...`. An empty array shows a text gallery state. Do not add stock or generated food photos.
+- `photos` renders only files referenced as `/images/...`. An empty array hides the gallery. Do not add stock or generated food photos. Photo `credit` values stay in content and are not rendered.
 
 ### Cafe Genovese addition
 
