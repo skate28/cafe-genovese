@@ -16,15 +16,14 @@ const DAYS: Array<[Weekday, string]> = [
 ];
 
 function rowValue(hours: Hours, key: Weekday): string {
-  if (!hoursConfirmed(hours)) return "To be confirmed";
-  const day = dayHours(hours, key);
+  const day = hoursConfirmed(hours) ? dayHours(hours, key) : null;
   if (day?.closed) return "Closed";
   if (day?.openTime && day.closeTime) return `${formatClock(day.openTime)} – ${formatClock(day.closeTime)}`;
-  return "To be confirmed";
+  return "—";
 }
 
-export function HoursList({ hours }: { hours: Hours }) {
-  const today = useTodayKey(hours.timezone || "America/New_York");
+export function HoursList({ hours, initialNow }: { hours: Hours; initialNow: string }) {
+  const today = useTodayKey(hours.timezone || "America/New_York", initialNow);
 
   return (
     <dl className="mt-2 divide-y divide-line">

@@ -14,19 +14,17 @@ function CategoryBody({ category }: { category: MenuCategory }) {
       {category.description?.trim() ? <p className="max-w-2xl text-ink/70">{category.description}</p> : null}
       <ul className="mt-6 grid gap-x-12 gap-y-5 md:grid-cols-2">
         {category.items.map((item, index) => {
-          const price = typeof item.price === "number" && Number.isFinite(item.price) ? item.price : null;
+          const amount = typeof item.price === "number" && Number.isFinite(item.price) && item.price >= 0 ? item.price : null;
+          const price = amount == null ? "" : formatPrice(amount, Boolean(item.priceFrom));
           return (
             <li key={`${category.id}-${item.id}-${index}`} className="break-inside-avoid border-b border-line/80 pb-4">
-              <div className="flex items-baseline gap-3">
-                <span className="min-w-0 font-display text-xl text-ink">
-                  {item.number ? <span className="mr-2 text-sm text-ink/40">{item.number}.</span> : null}
+              <div className="flex items-start justify-between gap-4">
+                <p className="min-w-0 font-display text-xl leading-tight text-ink">
+                  {item.number ? <span className="mr-2 text-sm tabular-nums text-ink/40">{item.number}.</span> : null}
                   {item.name}
-                </span>
-                {price != null ? (
-                  <>
-                    <span className="leader" aria-hidden="true" />
-                    <span className="shrink-0 font-display text-lg text-brand">{formatPrice(price, item.priceFrom)}</span>
-                  </>
+                </p>
+                {price ? (
+                  <p className="shrink-0 pt-0.5 text-right font-display text-lg tabular-nums tracking-tight text-brand">{price}</p>
                 ) : null}
               </div>
               {(item.signature || item.isNew || item.pieces) && (

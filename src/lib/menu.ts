@@ -24,30 +24,7 @@ export function getMenu(content: SiteContent = site): MenuCategory[] {
   return content.menu ?? [];
 }
 
-export type MenuView = {
-  categories: MenuCategory[];
-  /**
-   * True when nothing on the menu is confirmed yet, so placeholder items are shown
-   * as a labeled sample. Once any real item exists, placeholders are hidden.
-   */
-  sample: boolean;
-};
-
-export function menuView(content: SiteContent = site): MenuView {
-  const menu = getMenu(content);
-  const confirmed = visibleCategories(menu);
-  const hasRealItems = confirmed.some((category) => category.items.length > 0);
-  if (hasRealItems) return { categories: confirmed, sample: false };
-
-  const sample = menu.flatMap((category) => {
-    if (!category.name.trim()) return [];
-    const items = category.items.filter((item) => item.name.trim());
-    if (items.length === 0 && !category.description?.trim()) return [];
-    return [{ ...category, name: category.name.trim(), items }];
-  });
-
-  return {
-    categories: sample,
-    sample: sample.some((category) => category.items.length > 0),
-  };
+/** What the page shows. Placeholder items are dropped and are never rendered as a sample menu. */
+export function menuView(content: SiteContent = site): MenuCategory[] {
+  return visibleCategories(getMenu(content));
 }

@@ -9,8 +9,8 @@ import { telHref } from "@/lib/contact";
 import { menuView } from "@/lib/menu";
 
 export function MenuSection() {
-  const view = menuView(site);
-  if (view.categories.length === 0) return null;
+  const categories = menuView(site);
+  if (categories.length === 0) return null;
   const tel = telHref(site.phone);
 
   return (
@@ -27,16 +27,11 @@ export function MenuSection() {
         <Reveal delay={0.08} className="mt-10">
           <div className="rounded-[2rem] bg-linen p-3 shadow-[0_30px_80px_-48px] shadow-roast ring-1 ring-ink/10 sm:p-4">
             <div className="napkin rounded-[1.4rem] bg-linen/40 px-4 py-8 sm:px-8 sm:py-10">
-              {view.sample && (
-                <p className="mb-6 inline-flex rounded-full bg-honey px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-ink">
-                  Sample menu · placeholder · not final
-                </p>
-              )}
-              <MenuTabs categories={view.categories} />
+              <MenuTabs categories={categories} />
               {tel && (
                 <a href={tel} className={cn(buttonPrimary, "mt-10")}>
                   <Phone className="size-4" aria-hidden="true" />
-                  Call for the current menu
+                  Call ahead for takeout
                 </a>
               )}
             </div>

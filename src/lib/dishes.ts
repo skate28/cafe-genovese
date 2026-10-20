@@ -12,7 +12,7 @@ export type Dish = { item: MenuItem; photo: Photo | null };
 export function dishHighlights(content: SiteContent = site, max = 4): Dish[] {
   const hero = heroPhoto(content.photos, content.heroImage);
   const exclude = hero ? [hero.src] : [];
-  const items = menuView(content).categories.flatMap((category) => category.items).filter((item) => !item.placeholder);
+  const items = menuView(content).flatMap((category) => category.items).filter((item) => !item.placeholder);
   const withPhoto: Dish[] = [];
   const withoutPhoto: Dish[] = [];
   for (const item of items) {

@@ -13,7 +13,7 @@ export function primaryNav(): NavLink[] {
   const about = Boolean(site.about.heading.trim() || site.about.paragraphs.some((paragraph) => paragraph.trim()));
   return [
     { href: "#story", label: "Our story", show: about },
-    { href: "#menu", label: "Menu", show: menuView(site).categories.length > 0 },
+    { href: "#menu", label: "Menu", show: menuView(site).length > 0 },
     { href: "#expect", label: "What to expect", show: Boolean(site.whatToExpect?.items.length) },
     { href: "#soon", label: "Coming soon", show: anyFeatureVisible(site) },
     { href: "#order", label: "Order", show: orderingLinks(site).length > 0 },

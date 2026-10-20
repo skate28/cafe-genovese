@@ -95,13 +95,6 @@ body {
   background-size: 22px 22px;
 }
 
-.leader {
-  flex: 1 1 auto;
-  min-width: 0.75rem;
-  border-bottom: 1.5px dotted color-mix(in oklab, var(--cg-ink) 28%, transparent);
-  transform: translateY(-0.35em);
-}
-
 .ticket {
   background-image: radial-gradient(circle at 0 18px, transparent 10px, var(--cg-paper) 11px),
     radial-gradient(circle at 100% 18px, transparent 10px, var(--cg-paper) 11px);

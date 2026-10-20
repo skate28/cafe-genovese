@@ -3,6 +3,7 @@ import { Wordmark } from "@/components/wordmark";
 import { site } from "@/content/site";
 import { cn } from "@/lib/cn";
 import { phoneLabel, telHref } from "@/lib/contact";
+import { hoursFallback } from "@/lib/hours";
 import { directionsHref } from "@/lib/maps";
 import { safeHref } from "@/lib/ordering";
 import { logoPhoto } from "@/lib/photos";
@@ -48,7 +49,7 @@ export function Footer() {
         </div>
         <div className="space-y-2 text-sm text-linen/75">
           <p className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-honey">Hours</p>
-          <p>{site.hours.summary.trim() || "Hours coming soon"}</p>
+          <p>{hoursFallback(site.hours)}</p>
           {links.length > 0 && (
             <ul className="space-y-2 pt-3">
               {links.map((link) => (

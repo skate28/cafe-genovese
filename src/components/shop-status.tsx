@@ -1,46 +1,46 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 
 import type { PhoneNumber } from "@/content/types";
 import { cn } from "@/lib/cn";
-import { getShopStatus, hoursConfirmed, nextOpeningLabel, weekdayKey, type ShopClockInput, type ShopStatus } from "@/lib/hours";
+import {
+  getShopStatus,
+  hoursFallback,
+  statusLabel,
+  weekdayKey,
+  type ShopClockInput,
+  type ShopStatus,
+  type StatusTone,
+} from "@/lib/hours";
 
-const noopSubscribe = () => () => {};
-
-export function useShopStatus(input: ShopClockInput): ShopStatus | null {
-  const [status, setStatus] = useState<ShopStatus | null>(null);
+/** Cafe clock. The first paint uses the server timestamp so SSR and hydration match. */
+function useCafeNow(initialNow: string): Date {
+  const [now, setNow] = useState(() => new Date(initialNow));
 
   useEffect(() => {
-    const update = () => setStatus(getShopStatus(new Date(), input));
+    const update = () => setNow(new Date());
+    update();
+    const id = window.setInterval(update, 60_000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  return now;
+}
+
+export function ShopStatusPill({ input, className }: { input: ShopClockInput; className?: string }) {
+  const summary = hoursFallback(input.hours);
+  const [live, setLive] = useState<{ label: string; tone: StatusTone } | null>(null);
+
+  useEffect(() => {
+    const update = () => setLive(statusLabel(new Date(), input));
     update();
     const id = window.setInterval(update, 60_000);
     return () => window.clearInterval(id);
   }, [input]);
 
-  return status;
-}
-
-export function ShopStatusPill({ input, className }: { input: ShopClockInput; className?: string }) {
-  const status = useShopStatus(input);
-  const summary = input.hours.summary.trim() || "Hours coming soon";
-  let label = summary;
-  let short = "Hours coming soon";
-  let tone: "open" | "closed" | "neutral" = "neutral";
-
-  if (status?.isOpen === true) {
-    label = status.todayWindow ? `Open now · until ${status.todayWindow.split("–")[1]}` : "Open now";
-    short = "Open now";
-    tone = "open";
-  } else if (status?.isOpen === false) {
-    const next = nextOpeningLabel(new Date(), input.hours);
-    label = next ? `Closed now · ${next}` : "Closed now";
-    short = "Closed now";
-    tone = "closed";
-  } else if (!hoursConfirmed(input.hours)) {
-    label = summary;
-    short = "Hours coming soon";
-  }
+  const label = live?.label ?? summary;
+  const tone = live?.tone ?? "neutral";
 
   return (
     <p
@@ -61,19 +61,34 @@ export function ShopStatusPill({ input, className }: { input: ShopClockInput; cl
           )}
         />
       </span>
-      <span className="sm:hidden">{short}</span>
-      <span className="hidden sm:inline">{label}</span>
+      <span>{label}</span>
     </p>
   );
 }
 
-/** Today's weekday key in the cafe timezone. Null on the server so static HTML stays neutral. */
-export function useTodayKey(timeZone: string): string | null {
-  return useSyncExternalStore(
-    noopSubscribe,
-    () => weekdayKey(new Date(), timeZone),
-    () => null,
-  );
+/** Shown only while the cafe is actually closed. Hidden when hours are unknown or the doors are open. */
+export function ClosedNotice({
+  input,
+  initialNow,
+  notice,
+  className,
+}: {
+  input: ShopClockInput;
+  initialNow: string;
+  notice: string;
+  className?: string;
+}) {
+  const now = useCafeNow(initialNow);
+  const status = getShopStatus(now, input);
+  const text = notice.trim();
+  if (status.isOpen !== false || !text) return null;
+  return <p className={className}>{text}</p>;
+}
+
+/** Today's weekday key in the cafe timezone. Uses the server timestamp on the first paint. */
+export function useTodayKey(timeZone: string, initialNow: string): string | null {
+  const now = useCafeNow(initialNow);
+  return weekdayKey(now, timeZone);
 }
 
 export function callNumber(input: ShopClockInput, status: ShopStatus | null): PhoneNumber {
