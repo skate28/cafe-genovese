@@ -58,14 +58,37 @@ function slug(src: string): string {
 }
 
 /**
- * Photo for a menu item, matched by file name: `/images/<item.id>.jpg` or `/images/<item.id>-anything.jpg`.
- * Food and drink photos only.
+ * Verified photo → menu item. Checked before the filename guess.
+ * A pair is ignored when that item id is never asked for, or when the file is not in `photos`.
+ */
+const PHOTO_ITEM: Readonly<Record<string, string>> = {
+  "/images/grit-bowl.jpg": "special-3",
+  "/images/corned-beef-hash-eggs-grits.jpg": "special-4",
+  "/images/french-toast-bacon-eggs.jpg": "special-7",
+  "/images/bacon-cheeseburger-onion-rings.jpg": "bacon-cheeseburger",
+};
+
+function mappedPhoto(id: string, photos: Photo[], exclude: string[]): Photo | null {
+  const src = Object.entries(PHOTO_ITEM).find(([, itemId]) => itemId === id)?.[0];
+  if (!src) return null;
+  const photo = publicPhotos(photos).find((item) => item.src.trim() === src);
+  if (!photo || exclude.includes(photo.src)) return null;
+  return photo;
+}
+
+/**
+ * Photo for a menu item. The explicit map wins, then a file name:
+ * `/images/<item.id>.jpg` or `/images/<item.id>-anything.jpg`.
+ * Food and drink photos only for the filename guess. Excluded srcs (the hero) are never returned.
  */
 export function photoForItemId(id: string, photos: Photo[], exclude: string[] = []): Photo | null {
+  const mapped = mappedPhoto(id, photos, exclude);
+  if (mapped) return mapped;
+
   const food = publicPhotos(photos).filter((photo) => photo.category === "food" || photo.category === "drinks");
   const candidates = [
     ...food.filter((photo) => slug(photo.src) === id),
     ...food.filter((photo) => slug(photo.src).startsWith(`${id}-`)),
   ];
-  return candidates.find((photo) => !exclude.includes(photo.src)) ?? candidates[0] ?? null;
+  return candidates.find((photo) => !exclude.includes(photo.src)) ?? null;
 }

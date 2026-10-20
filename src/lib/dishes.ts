@@ -17,8 +17,10 @@ export function dishHighlights(content: SiteContent = site, max = 4): Dish[] {
   const withoutPhoto: Dish[] = [];
   for (const item of items) {
     const photo = photoForItemId(item.id, content.photos, exclude);
-    if (photo) withPhoto.push({ item, photo });
-    else if (item.signature) withoutPhoto.push({ item, photo: null });
+    if (photo) {
+      withPhoto.push({ item, photo });
+      exclude.push(photo.src);
+    } else if (item.signature) withoutPhoto.push({ item, photo: null });
   }
   withPhoto.sort((a, b) => Number(Boolean(b.item.signature)) - Number(Boolean(a.item.signature)));
   const list = withPhoto.length >= 1 ? withPhoto : withoutPhoto;
